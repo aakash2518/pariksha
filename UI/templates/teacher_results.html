@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/teacher" class="back-btn">← Back to Dashboard</a>
+        <h1>📊 Student Results</h1>
+
+        {% if results %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Roll Number</th>
+                    <th>Test Code</th>
+                    <th>Marks Obtained</th>
+                    <th>Total Marks</th>
+                    <th>Percentage</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td>{{ result['Student Name'] }}</td>
+                    <td>{{ result['Roll Number'] }}</td>
+                    <td>{{ result['Test Code'] }}</td>
+                    <td>{{ result['Marks Obtained'] }}</td>
+                    <td>{{ result['Total Marks'] }}</td>
+                    <td>{{ result['Percentage'] }}%</td>
+                    <td>{{ result['Date'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-results">
+            <h2>No results available yet</h2>
+            <p>Results will appear here once students complete their exams</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

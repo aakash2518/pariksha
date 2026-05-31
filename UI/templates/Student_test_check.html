@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASH - Enter Test ID</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#0f172a;min-height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden}
+        .bg-glow{position:fixed;width:500px;height:500px;border-radius:50%;filter:blur(120px);opacity:.12;pointer-events:none}
+        .glow-1{background:#14b8a6;top:-150px;right:-150px}
+        .glow-2{background:#6366f1;bottom:-150px;left:-150px}
+        .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:48px 40px;max-width:420px;width:90%;backdrop-filter:blur(20px);position:relative;z-index:1;text-align:center}
+        .logo-icon{width:64px;height:64px;background:linear-gradient(135deg,#14b8a6,#0ea5e9);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px}
+        h2{font-size:1.5rem;font-weight:700;color:#f1f5f9;margin-bottom:6px}
+        .sub{color:#64748b;font-size:.88rem;margin-bottom:32px}
+        .input-group{text-align:left;margin-bottom:20px}
+        .input-group label{display:block;font-size:.82rem;font-weight:500;color:#94a3b8;margin-bottom:8px}
+        .input-wrap{display:flex;align-items:center;gap:10px;background:#1e293b;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:0 16px}
+        .input-wrap i{color:#475569;font-size:.9rem}
+        .input-wrap input{flex:1;background:transparent;border:none;outline:none;color:#e2e8f0;font-size:.95rem;padding:14px 0;font-family:'Inter',sans-serif;letter-spacing:2px}
+        .input-wrap input::placeholder{color:#475569;letter-spacing:0}
+        .input-wrap:focus-within{border-color:#14b8a6}
+        .btn{width:100%;padding:14px;background:linear-gradient(135deg,#14b8a6,#0ea5e9);color:white;border:none;border-radius:12px;font-size:.95rem;font-weight:600;cursor:pointer;transition:opacity .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+        .btn:hover{opacity:.9}
+        .error-msg{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:10px 14px;border-radius:10px;font-size:.85rem;margin-top:16px}
+        .footer{margin-top:28px;font-size:.78rem;color:#334155}
+        .back-link{display:inline-block;margin-top:16px;color:#475569;font-size:.82rem;text-decoration:none}
+        .back-link:hover{color:#94a3b8}
+    </style>
+</head>
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <div class="card">
+        <div class="logo-icon">📝</div>
+        <h2>Enter Test ID</h2>
+        <p class="sub">Enter the test code provided by your teacher</p>
+        <form action="/student/verify_code" method="POST" onsubmit="return validateInput()">
+            <div class="input-group">
+                <label for="test_code">Test ID</label>
+                <div class="input-wrap">
+                    <i class="fas fa-key"></i>
+                    <input type="text" id="test_code" name="test_code" placeholder="e.g. a1b2c3d4" required>
+                </div>
+            </div>
+            <button type="submit" class="btn"><i class="fas fa-arrow-right"></i> Start Test</button>
+        </form>
+        {% if error %}
+        <div class="error-msg"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+        {% endif %}
+        <div class="footer">&copy; 2024 DASH. All Rights Reserved.</div>
+        <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </div>
+    <script>
+        function validateInput(){
+            var val=document.getElementById('test_code').value.trim();
+            if(!/^[a-zA-Z0-9]+$/.test(val)){alert('Please enter a valid Test ID.');return false;}
+            return true;
+        }
+    </script>
+</body>
+</html>

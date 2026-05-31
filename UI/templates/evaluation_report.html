@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Answers Evaluation Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #43a047 0%, #66bb6a 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin: 0;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .question-block {
+            margin-bottom: 40px;
+            border-left: 4px solid #43a047;
+            padding-left: 20px;
+        }
+
+        .question-title {
+            color: #43a047;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .answer-section {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .answer-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .answer-text {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .marks-section {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0;
+        }
+
+        .mark-box {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+
+        .marks-obtained {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .marks-total {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .remarks {
+            background: #f1f8e9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #8bc34a;
+        }
+
+        .remarks-label {
+            font-weight: 600;
+            color: #558b2f;
+            margin-bottom: 8px;
+        }
+
+        .remarks-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .summary h2 {
+            margin-bottom: 15px;
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #5568d3;
+        }
+
+        .print-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #43a047;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            margin-left: 10px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .print-btn:hover {
+            background: #388e3c;
+        }
+
+        @media print {
+            .back-btn, .print-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI-Powered Answer Sheet Evaluation</h1>
+            <p style="margin-top: 10px; opacity: 0.9;">Evaluated using Advanced AI (Grok + Gemini)</p>
+        </div>
+
+        <div class="content">
+            {% if evaluation_data %}
+                {% for question in evaluation_data %}
+                <div class="question-block">
+                    <div class="question-title">
+                        Question: {{ question.question_text }}
+                    </div>
+
+                    <div class="answer-section">
+                        <div class="answer-label">Student Answer:</div>
+                        <div class="answer-text">{{ question.student_answer }}</div>
+
+                        <div class="marks-section">
+                            <div class="mark-box marks-obtained">
+                                Mark Obtain: {{ question.marks_obtained }}
+                            </div>
+                            <div class="mark-box marks-total">
+                                Out Of: {{ question.max_marks }}
+                            </div>
+                        </div>
+
+                        <div class="remarks">
+                            <div class="remarks-label">Remarks:</div>
+                            <div class="remarks-text">{{ question.feedback }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="summary">
+                    <h2>Overall Performance</h2>
+                    <div class="summary-stats">
+                        <div class="stat-box">
+                            <div class="stat-value">{{ total_marks_obtained }}</div>
+                            <div class="stat-label">Total Marks Obtained</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">{{ total_max_marks }}</div>
+                            <div class="stat-label">Total Marks</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">{{ percentage }}%</div>
+                            <div class="stat-label">Percentage</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">{{ grade }}</div>
+                            <div class="stat-label">Grade</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="/teacher/paper_checking" class="back-btn">← Back to Paper Checking</a>
+                    <button onclick="window.print()" class="print-btn">🖨️ Print Report</button>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 40px;">
+                    <h2>No evaluation data available</h2>
+                    <p>Please upload question paper and answer sheet to generate evaluation report.</p>
+                    <a href="/teacher/paper_checking" class="back-btn">← Back to Paper Checking</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

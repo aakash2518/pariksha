@@ -1,0 +1,140 @@
+═══════════════════════════════════════════════════════════
+    GOOGLE GEMINI API KEY KAISE LEIN (HINDI GUIDE)
+═══════════════════════════════════════════════════════════
+
+📌 YE ERROR KYUN AA RAHA HAI?
+────────────────────────────────────────────────────────────
+"Error: AI module not available"
+
+Kyunki aapke app.py mein jo API key hai wo FAKE hai.
+Aapko apna REAL API key chahiye (FREE hai, 5 min mein mil jayega)
+
+
+🎯 STEP-BY-STEP (BAHUT EASY!)
+────────────────────────────────────────────────────────────
+
+STEP 1: Is link pe jao
+────────────────────────────────────────────────────────────
+https://aistudio.google.com/app/apikey
+
+(Copy-paste karo browser mein)
+
+
+STEP 2: Google se login karo
+────────────────────────────────────────────────────────────
+- Apna Gmail ID use karo
+- Password daalo
+- Login ho jao
+
+
+STEP 3: "Create API Key" button pe click karo
+────────────────────────────────────────────────────────────
+- Blue color ka button dikhega
+- "Create API Key" likha hoga
+- Us pe click karo
+
+
+STEP 4: "Create API key in new project" select karo
+────────────────────────────────────────────────────────────
+- Radio button pe click karo
+- Phir "Create" button pe click karo
+
+
+STEP 5: API Key copy karo
+────────────────────────────────────────────────────────────
+- Ek lambi string dikhegi (jaise: AIzaSy...)
+- Copy button pe click karo
+- Ya manually select karke Ctrl+C karo
+
+
+STEP 6: app.py file mein paste karo
+────────────────────────────────────────────────────────────
+1. app.py file kholo (VS Code ya koi editor mein)
+
+2. Line 52 dhundo jahan likha hai:
+   GOOGLE_API_KEY = "AIzaSy_YOUR_OLD_KEY_HERE"
+
+3. Quotes ke beech wali string ko delete karo
+
+4. Apni copied key paste karo
+
+5. File save karo (Ctrl+S)
+
+
+EXAMPLE:
+────────────────────────────────────────────────────────────
+PEHLE (Fake key):
+GOOGLE_API_KEY = "AIzaSy_YOUR_OLD_KEY_HERE"
+
+BAAD MEIN (Aapki real key):
+GOOGLE_API_KEY = "AIzaSy_YOUR_NEW_KEY_HERE"
+                  ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+                  Yahan apni key paste karo
+
+
+STEP 7: Application restart karo
+────────────────────────────────────────────────────────────
+Terminal mein:
+1. Ctrl+C press karo (app band ho jayega)
+2. Phir type karo: python app.py
+3. Enter press karo
+
+
+✅ KAISE PATA CHALEGA KI KAAM KAR RAHA HAI?
+────────────────────────────────────────────────────────────
+Terminal mein ye dikhna chahiye:
+✓ Google Generative AI loaded successfully
+* Running on http://127.0.0.1:5000
+
+Aur browser mein error nahi aayega!
+
+
+💰 KITNA PAISA LAGEGA?
+────────────────────────────────────────────────────────────
+BILKUL FREE! ₹0
+
+- Koi credit card nahi chahiye
+- Koi payment nahi
+- 1,500 requests per day FREE
+- Bas Google account chahiye
+
+
+⚠️ DHYAN RAKHNE WALI BAATEIN
+────────────────────────────────────────────────────────────
+1. API key ko kisi se share mat karo
+2. Screenshot leke WhatsApp pe mat bhejo
+3. GitHub pe upload mat karo
+4. Apne paas safe rakho
+
+
+🐛 AGAR PROBLEM AA RAHI HAI?
+────────────────────────────────────────────────────────────
+
+Problem 1: "API key not valid" error
+Solution: 
+- Puri key copy ki hai? Check karo
+- Extra space to nahi? Check karo
+- Key "AIza" se start honi chahiye
+
+Problem 2: "Quota exceeded" error
+Solution:
+- 1 minute wait karo
+- Phir try karo
+
+Problem 3: Create button nahi dikh raha
+Solution:
+- Google se login ho? Check karo
+- Dusra browser try karo
+- Cache clear karo
+
+
+📞 HELP CHAHIYE?
+────────────────────────────────────────────────────────────
+1. GET_API_KEY.md file padho (English mein detailed guide)
+2. Google AI Studio: https://aistudio.google.com
+3. Ya mujhe batao kya problem aa rahi hai
+
+
+═══════════════════════════════════════════════════════════
+    BAS 5 MINUTE MEIN READY! 🎉
+═══════════════════════════════════════════════════════════

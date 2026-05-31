@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASH - Test Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh;padding:20px}
+
+        .top-bar{background:#1e293b;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+        .top-bar .exam-info{display:flex;gap:20px;flex-wrap:wrap}
+        .info-chip{background:#0f172a;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:6px 12px;font-size:.78rem;color:#94a3b8}
+        .info-chip span{color:#f1f5f9;font-weight:600}
+        .top-bar-title{font-size:1rem;font-weight:700;color:#f1f5f9}
+
+        .layout{display:grid;grid-template-columns:340px 1fr;gap:16px;align-items:start}
+
+        /* Left panel */
+        .left-panel{background:#1e293b;border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden}
+        .panel-header{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.06);font-size:.8rem;text-transform:uppercase;letter-spacing:1px;color:#475569;font-weight:600}
+        .questions-list{padding:12px}
+        .question-item{padding:12px 14px;border-radius:10px;margin-bottom:8px;cursor:pointer;border:1px solid transparent;transition:all .2s;font-size:.88rem;color:#94a3b8;line-height:1.4}
+        .question-item:hover{background:rgba(99,102,241,.08);border-color:rgba(99,102,241,.15)}
+        .question-item.active{background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.3);color:#c7d2fe}
+        .question-item .q-num{font-size:.72rem;color:#475569;margin-bottom:4px;font-weight:600}
+        .question-item .q-marks{font-size:.72rem;color:#6366f1;margin-top:4px}
+        .question-item.answered .q-num::after{content:' ✓';color:#5eead4}
+
+        .nav-btns{display:flex;gap:8px;padding:12px}
+        .nav-btn{flex:1;padding:10px;background:#0f172a;border:1px solid rgba(255,255,255,.08);border-radius:9px;color:#94a3b8;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+        .nav-btn:hover{border-color:#6366f1;color:#a5b4fc}
+
+        /* Right panel */
+        .right-panel{background:#1e293b;border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden}
+        .canvas-header{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
+        .canvas-header h3{font-size:.9rem;font-weight:600;color:#f1f5f9}
+        .canvas-header .q-badge{background:rgba(99,102,241,.15);color:#a5b4fc;padding:4px 10px;border-radius:20px;font-size:.75rem;font-weight:600}
+
+        .canvas-wrap{background:#f8fafc;margin:0;position:relative;overflow-y:auto;overflow-x:hidden;max-height:70vh}
+        canvas{display:block;cursor:crosshair}
+
+        .toolbar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap;background:#0f172a}
+        .tool-btn{padding:7px 12px;background:#1e293b;border:1px solid rgba(255,255,255,.08);border-radius:8px;color:#94a3b8;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px}
+        .tool-btn:hover{border-color:#6366f1;color:#a5b4fc}
+        .tool-btn.active-tool{background:rgba(99,102,241,.15);border-color:#6366f1;color:#a5b4fc}
+        .tool-sep{width:1px;height:24px;background:rgba(255,255,255,.06);margin:0 2px}
+        select.tool-select{padding:6px 10px;background:#1e293b;border:1px solid rgba(255,255,255,.08);border-radius:8px;color:#94a3b8;font-size:.78rem;cursor:pointer;outline:none}
+        input[type=color]{width:32px;height:32px;border:1px solid rgba(255,255,255,.08);border-radius:8px;cursor:pointer;background:none;padding:2px}
+
+        .ocr-section{padding:14px 16px;border-top:1px solid rgba(255,255,255,.06)}
+        .ocr-label{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:#475569;margin-bottom:8px;font-weight:600}
+        .ocr-section textarea{width:100%;background:#0f172a;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;color:#e2e8f0;font-size:.88rem;font-family:'Inter',sans-serif;resize:vertical;min-height:80px;outline:none;line-height:1.5}
+        .ocr-section textarea:focus{border-color:#6366f1}
+        .ocr-section textarea::placeholder{color:#334155}
+        .ocr-status{font-size:.78rem;color:#64748b;margin-top:6px;min-height:18px}
+
+        .bottom-actions{display:flex;gap:10px;padding:14px 16px;border-top:1px solid rgba(255,255,255,.06);flex-wrap:wrap}
+        .action-btn{padding:10px 16px;border-radius:10px;font-size:.82rem;font-weight:600;cursor:pointer;border:none;display:flex;align-items:center;gap:6px;transition:opacity .2s}
+        .action-btn:hover{opacity:.85}
+        .btn-save{background:rgba(20,184,166,.15);color:#5eead4;border:1px solid rgba(20,184,166,.2)}
+        .btn-ocr{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.2)}
+        .btn-pdf{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;margin-left:auto}
+        .btn-submit{background:linear-gradient(135deg,#14b8a6,#0ea5e9);color:white}
+    </style>
+</head>
+<body>
+    <!-- Top bar -->
+    <div class="top-bar">
+        <div class="top-bar-title">📝 {{ test_details['name'] }}</div>
+        <div class="exam-info">
+            <div class="info-chip">Subject: <span>{{ test_details['subject'] }}</span></div>
+            <div class="info-chip">Faculty: <span>{{ test_details['faculty '] }}</span></div>
+            <div class="info-chip">Total Marks: <span>{{ test_details['total  marks'] }}</span></div>
+            <div class="info-chip">Date: <span>{{ test_details['date'] }}</span></div>
+        </div>
+    </div>
+
+    <div class="layout">
+        <!-- Left: Questions list -->
+        <div class="left-panel">
+            <div class="panel-header">Questions</div>
+            <div class="questions-list">
+                {% for question in questions %}
+                <div class="question-item{% if loop.index == 1 %} active{% endif %}" id="qitem{{ loop.index0 }}" onclick="jumpToQuestion({{ loop.index0 }})">
+                    <div class="q-num">Question {{ loop.index }}</div>
+                    <div>{{ question['Questions'] }}</div>
+                    <div class="q-marks">{{ question['Marks'] }} marks</div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="nav-btns">
+                <button class="nav-btn" onclick="prevQuestion()"><i class="fas fa-chevron-left"></i> Prev</button>
+                <button class="nav-btn" onclick="nextQuestion()">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Right: Canvas + OCR -->
+        <div class="right-panel">
+            <div class="canvas-header">
+                <h3 id="currentQLabel">Question 1</h3>
+                <span class="q-badge" id="currentQBadge">Q1 / {{ questions|length }}</span>
+            </div>
+
+            <div class="canvas-wrap">
+                <canvas id="writingPad" width="800" height="500"></canvas>
+            </div>
+
+            <div class="toolbar">
+                <button class="tool-btn active-tool" id="penBtn" onclick="setPen()"><i class="fas fa-pen"></i> Pen</button>
+                <button class="tool-btn" id="eraserBtn" onclick="setEraser()"><i class="fas fa-eraser"></i> Eraser</button>
+                <div class="tool-sep"></div>
+                <button class="tool-btn" onclick="undo()"><i class="fas fa-undo"></i></button>
+                <button class="tool-btn" onclick="redo()"><i class="fas fa-redo"></i></button>
+                <button class="tool-btn" onclick="clearCanvas()"><i class="fas fa-trash"></i> Clear</button>
+                <div class="tool-sep"></div>
+                <select class="tool-select" id="penSize" onchange="changePenSize(this.value)">
+                    <option value="1">XS</option>
+                    <option value="2" selected>S</option>
+                    <option value="3">M</option>
+                    <option value="5">L</option>
+                </select>
+                <input type="color" id="penColor" value="#000000" onchange="changePenColor(this.value)" title="Pen color">
+            </div>
+
+            <div class="ocr-section">
+                <div class="ocr-label">Extracted / Typed Answer</div>
+                <textarea id="ocrText" placeholder="Click 'Read Handwriting' to extract text, or type your answer directly here..."></textarea>
+                <div class="ocr-status" id="ocrStatus"></div>
+            </div>
+
+            <div class="bottom-actions">
+                <button class="action-btn btn-save" onclick="saveCanvas()"><i class="fas fa-save"></i> Save Answer</button>
+                <button class="action-btn btn-ocr" onclick="convertHandwriting()"><i class="fas fa-magic"></i> Read Handwriting</button>
+                <button class="action-btn btn-pdf" onclick="downloadTextPDF()"><i class="fas fa-file-pdf"></i> Download PDF</button>
+            </div>
+
+            <div style="padding:0 16px 16px">
+                <button type="button" class="action-btn btn-submit" onclick="submitTest()" style="width:100%;justify-content:center;padding:12px">
+                    <i class="fas fa-paper-plane"></i> Submit Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('writingPad');
+        const ctx = canvas.getContext('2d');
+
+        let penSizeVal = 2, penColorVal = '#000000';
+        let drawing = false, lastX = 0, lastY = 0;
+        let history = [], historyStep = -1;
+        let currentQuestionIndex = 0;
+        const savedAnswers = {};
+
+        const questionEls = document.querySelectorAll('.question-item');
+        const questionTexts = [{% for q in questions %}"{{ q['Questions'] | replace('"', '\\"') }}"{% if not loop.last %},{% endif %}{% endfor %}];
+        const totalQ = questionEls.length;
+
+        // Set canvas width to container, height is tall for infinite scroll feel
+        function initCanvas(){
+            const wrap = canvas.parentElement;
+            canvas.width = wrap.clientWidth || 900;
+            canvas.height = 1200; // tall enough to write freely
+            ctx.lineJoin='round'; ctx.lineCap='round';
+            ctx.lineWidth=penSizeVal; ctx.strokeStyle=penColorVal;
+        }
+        initCanvas();
+        window.addEventListener('resize', ()=>{
+            const imgData = canvas.toDataURL();
+            initCanvas();
+            const img = new Image(); img.src = imgData;
+            img.onload = ()=>ctx.drawImage(img,0,0);
+        });
+
+        // Auto-expand canvas when drawing near bottom
+        canvas.addEventListener('mousemove', e=>{
+            if(!drawing) return;
+            if(e.offsetY > canvas.height - 100){
+                const imgData = canvas.toDataURL();
+                canvas.height += 400;
+                ctx.lineJoin='round'; ctx.lineCap='round';
+                ctx.lineWidth=penSizeVal; ctx.strokeStyle=penColorVal;
+                const img = new Image(); img.src = imgData;
+                img.onload = ()=>ctx.drawImage(img,0,0);
+            }
+            ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(e.offsetX,e.offsetY); ctx.stroke();
+            [lastX,lastY]=[e.offsetX,e.offsetY];
+        });
+        canvas.addEventListener('mousedown', e=>{ drawing=true; [lastX,lastY]=[e.offsetX,e.offsetY]; saveState(); });
+        canvas.addEventListener('mouseup', ()=>{ drawing=false; ctx.beginPath(); });
+        canvas.addEventListener('mouseout', ()=>{ drawing=false; ctx.beginPath(); });
+
+        canvas.addEventListener('touchstart', e=>{ e.preventDefault(); drawing=true; const t=e.touches[0],r=canvas.getBoundingClientRect(); [lastX,lastY]=[t.clientX-r.left,t.clientY-r.top]; saveState(); },{passive:false});
+        canvas.addEventListener('touchmove', e=>{
+            e.preventDefault(); if(!drawing)return;
+            const t=e.touches[0],r=canvas.getBoundingClientRect();
+            const x=t.clientX-r.left, y=t.clientY-r.top;
+            if(y > canvas.height - 100){
+                const imgData = canvas.toDataURL();
+                canvas.height += 400;
+                ctx.lineJoin='round'; ctx.lineCap='round';
+                ctx.lineWidth=penSizeVal; ctx.strokeStyle=penColorVal;
+                const img = new Image(); img.src = imgData;
+                img.onload = ()=>ctx.drawImage(img,0,0);
+            }
+            ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke();
+            [lastX,lastY]=[x,y];
+        },{passive:false});
+        canvas.addEventListener('touchend', ()=>{ drawing=false; });
+
+        function clearCanvas(){ ctx.clearRect(0,0,canvas.width,canvas.height); history=[]; historyStep=-1; }
+        function saveState(){ if(historyStep<history.length-1)history=history.slice(0,historyStep+1); history.push(canvas.toDataURL()); historyStep++; }
+        function undo(){ if(historyStep<=0)return; historyStep--; const img=new Image(); img.src=history[historyStep]; img.onload=()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0); }; }
+        function redo(){ if(historyStep>=history.length-1)return; historyStep++; const img=new Image(); img.src=history[historyStep]; img.onload=()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0); }; }
+        function setEraser(){ ctx.strokeStyle='#f8fafc'; document.getElementById('penBtn').classList.remove('active-tool'); document.getElementById('eraserBtn').classList.add('active-tool'); }
+        function setPen(){ ctx.strokeStyle=penColorVal; document.getElementById('eraserBtn').classList.remove('active-tool'); document.getElementById('penBtn').classList.add('active-tool'); }
+        function changePenSize(s){ penSizeVal=parseInt(s); ctx.lineWidth=penSizeVal; }
+        function changePenColor(c){ penColorVal=c; ctx.strokeStyle=c; setPen(); }
+
+        function saveCanvas(){
+            savedAnswers[currentQuestionIndex]={ canvas:canvas.toDataURL(), text:document.getElementById('ocrText').value };
+            document.getElementById('qitem'+currentQuestionIndex).classList.add('answered');
+            document.getElementById('ocrStatus').textContent='✅ Answer saved for Q'+(currentQuestionIndex+1);
+        }
+
+        async function convertHandwriting(){
+            const status=document.getElementById('ocrStatus');
+            status.textContent='⏳ Reading handwriting...';
+            const imageData=canvas.toDataURL('image/png');
+            const question=questionTexts[currentQuestionIndex]||'';
+            try{
+                const resp=await fetch('/student/ocr_answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:imageData,question:question})});
+                const data=await resp.json();
+                if(data.success){
+                    document.getElementById('ocrText').value=data.text;
+                    status.textContent='✅ Handwriting extracted! You can edit the text above.';
+                    savedAnswers[currentQuestionIndex]={canvas:imageData,text:data.text};
+                    document.getElementById('qitem'+currentQuestionIndex).classList.add('answered');
+                } else { status.textContent='⚠️ Could not read handwriting. Please type your answer above.'; }
+            } catch(err){ status.textContent='❌ Error: '+err.message; }
+        }
+
+        async function downloadTextPDF(){
+            autoSaveCurrent();
+            const status=document.getElementById('ocrStatus');
+            status.textContent='⏳ Reading handwriting from all answers...';
+            const blankSnap = (()=>{ const tmp=document.createElement('canvas'); tmp.width=canvas.width; tmp.height=canvas.height; return tmp.toDataURL(); })();
+            for(let i=0;i<totalQ;i++){
+                const saved=savedAnswers[i];
+                const hasText=saved&&saved.text&&saved.text.trim().length>0;
+                const hasDrawing=saved&&saved.canvas&&saved.canvas!==blankSnap;
+                if(!hasText&&hasDrawing){
+                    try{
+                        const resp=await fetch('/student/ocr_answer',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({image:saved.canvas,question:questionTexts[i]||''})});
+                        const data=await resp.json();
+                        if(data.success&&data.text&&data.text!=='No answer written'){
+                            savedAnswers[i]={...saved,text:data.text};
+                            if(i===currentQuestionIndex) document.getElementById('ocrText').value=data.text;
+                        }
+                    } catch(e){ console.warn('OCR failed for Q'+(i+1),e); }
+                }
+            }
+            const answers=questionTexts.map((q,i)=>({question:q,answer:(savedAnswers[i]&&savedAnswers[i].text&&savedAnswers[i].text.trim())?savedAnswers[i].text:'No answer written'}));
+            status.textContent='⏳ Generating PDF...';
+            try{
+                const resp=await fetch('/student/generate_pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({answers:answers,student_name:'{{ session.get("student_name","Student") }}',student_roll:'{{ session.get("student_roll","N/A") }}',test_name:'{{ test_details["name"] }}',subject:'{{ test_details["subject"] }}'})});
+                if(resp.ok){
+                    const blob=await resp.blob(); const url=URL.createObjectURL(blob);
+                    const a=document.createElement('a'); a.href=url; a.download='answer_sheet_{{ session.get("student_roll","student") }}.pdf'; a.click(); URL.revokeObjectURL(url);
+                    status.textContent='✅ PDF downloaded!';
+                } else { const err=await resp.json(); status.textContent='❌ PDF error: '+(err.error||'Unknown'); }
+            } catch(err){ status.textContent='❌ Error: '+err.message; }
+        }
+
+        function showQuestion(index){
+            questionEls.forEach((q,i)=>q.classList.toggle('active',i===index));
+            document.getElementById('currentQLabel').textContent='Question '+(index+1);
+            document.getElementById('currentQBadge').textContent='Q'+(index+1)+' / '+totalQ;
+            if(savedAnswers[index]){
+                const img=new Image(); img.src=savedAnswers[index].canvas;
+                img.onload=()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0); };
+                document.getElementById('ocrText').value=savedAnswers[index].text||'';
+            } else { ctx.clearRect(0,0,canvas.width,canvas.height); document.getElementById('ocrText').value=''; }
+            document.getElementById('ocrStatus').textContent='';
+        }
+
+        function autoSaveCurrent(){
+            savedAnswers[currentQuestionIndex]={canvas:canvas.toDataURL(),text:document.getElementById('ocrText').value};
+        }
+
+        function jumpToQuestion(index){ autoSaveCurrent(); currentQuestionIndex=index; showQuestion(index); }
+        function prevQuestion(){ if(currentQuestionIndex>0){ autoSaveCurrent(); currentQuestionIndex--; showQuestion(currentQuestionIndex); } }
+        function nextQuestion(){ if(currentQuestionIndex<totalQ-1){ autoSaveCurrent(); currentQuestionIndex++; showQuestion(currentQuestionIndex); } }
+
+        showQuestion(0);
+
+        async function submitTest(){
+            autoSaveCurrent();
+            const status = document.getElementById('ocrStatus');
+            const submitBtn = document.querySelector('.btn-submit');
+            status.textContent = '⏳ Submitting...';
+            if(submitBtn){ submitBtn.disabled=true; submitBtn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Submitting...'; }
+
+            // Build answers from saved text only (skip OCR on submit to avoid timeout)
+            const answers = questionTexts.map((q, i) => ({
+                question: q,
+                answer: (savedAnswers[i] && savedAnswers[i].text && savedAnswers[i].text.trim())
+                    ? savedAnswers[i].text.trim()
+                    : 'No answer written'
+            }));
+
+            try{
+                const resp = await fetch('/student/submit', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ answers: answers })
+                });
+                const data = await resp.json();
+                if(data.success){
+                    window.location.href = data.redirect || '/student/submitted';
+                } else {
+                    status.textContent = '❌ Submission failed. Please try again.';
+                    if(submitBtn){ submitBtn.disabled=false; submitBtn.innerHTML='<i class="fas fa-paper-plane"></i> Submit Test'; }
+                }
+            } catch(err){
+                status.textContent = '❌ Error: ' + err.message;
+                if(submitBtn){ submitBtn.disabled=false; submitBtn.innerHTML='<i class="fas fa-paper-plane"></i> Submit Test'; }
+            }
+        }
+    </script>
+</body>
+</html>

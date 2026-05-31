@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASH - Results Summary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;display:flex;min-height:100vh}
+        .sidebar{width:260px;background:#1e293b;border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;padding:28px 16px;position:fixed;height:100vh}
+        .sidebar-logo{display:flex;align-items:center;gap:12px;padding:0 8px 28px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:20px}
+        .sidebar-logo .icon{width:40px;height:40px;background:linear-gradient(135deg,#6366f1,#14b8a6);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+        .sidebar-logo span{font-size:1.1rem;font-weight:700;color:#f1f5f9}
+        .sidebar-logo small{display:block;font-size:.72rem;color:#64748b}
+        .nav-label{font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:#475569;padding:0 12px;margin-bottom:8px}
+        .nav-link{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;color:#94a3b8;text-decoration:none;font-size:.9rem;font-weight:500;transition:all .2s;margin-bottom:4px}
+        .nav-link i{width:18px;text-align:center;font-size:.9rem}
+        .nav-link:hover,.nav-link.active{background:rgba(99,102,241,.15);color:#a5b4fc}
+        .nav-link.active{border-left:3px solid #6366f1}
+        .sidebar-bottom{margin-top:auto}
+        .main{margin-left:260px;flex:1;padding:36px}
+        .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+        .page-header h1{font-size:1.6rem;font-weight:700;color:#f1f5f9}
+        .page-header p{color:#64748b;font-size:.88rem;margin-top:3px}
+        .header-actions{display:flex;gap:10px}
+        .btn-sm{padding:9px 16px;border-radius:9px;font-size:.82rem;font-weight:600;cursor:pointer;border:none;display:flex;align-items:center;gap:6px;transition:opacity .2s;text-decoration:none}
+        .btn-refresh{background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.2)}
+        .btn-cleanup{background:rgba(239,68,68,.1);color:#fca5a5;border:1px solid rgba(239,68,68,.2)}
+        .btn-sm:hover{opacity:.8}
+
+        .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px}
+        .stat-card{background:#1e293b;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:20px 22px}
+        .stat-card .stat-val{font-size:1.8rem;font-weight:700;color:#f1f5f9;margin-bottom:4px}
+        .stat-card .stat-label{font-size:.78rem;color:#64748b;text-transform:uppercase;letter-spacing:.5px}
+        .stat-card.purple .stat-val{color:#a5b4fc}
+        .stat-card.teal .stat-val{color:#5eead4}
+        .stat-card.amber .stat-val{color:#fcd34d}
+        .stat-card.rose .stat-val{color:#fda4af}
+
+        .table-card{background:#1e293b;border:1px solid rgba(255,255,255,.06);border-radius:16px;overflow:hidden}
+        .table-header{padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
+        .table-header h2{font-size:1rem;font-weight:600;color:#f1f5f9}
+        .table-header p{font-size:.8rem;color:#64748b;margin-top:2px}
+        table{width:100%;border-collapse:collapse}
+        th{background:#0f172a;padding:12px 16px;text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;color:#475569;font-weight:600}
+        td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:.88rem;color:#94a3b8}
+        tr:last-child td{border-bottom:none}
+        tr:hover td{background:rgba(255,255,255,.02)}
+        .grade-badge{padding:4px 10px;border-radius:20px;font-size:.75rem;font-weight:700}
+        .grade-a-plus,.grade-a{background:rgba(20,184,166,.15);color:#5eead4}
+        .grade-b-plus,.grade-b{background:rgba(99,102,241,.15);color:#a5b4fc}
+        .grade-c{background:rgba(245,158,11,.15);color:#fcd34d}
+        .grade-d,.grade-f{background:rgba(239,68,68,.15);color:#fca5a5}
+        .status-badge{background:rgba(20,184,166,.1);color:#5eead4;border:1px solid rgba(20,184,166,.2);padding:4px 10px;border-radius:20px;font-size:.75rem;font-weight:600}
+        .action-btn{padding:6px 12px;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;border:none;transition:opacity .2s;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+        .btn-view{background:rgba(99,102,241,.15);color:#a5b4fc}
+        .btn-dl{background:rgba(20,184,166,.15);color:#5eead4;margin-left:6px}
+        .action-btn:hover{opacity:.8}
+        .empty-state{text-align:center;padding:60px 20px}
+        .empty-state .empty-icon{font-size:48px;margin-bottom:16px;opacity:.4}
+        .empty-state h3{color:#475569;font-size:1rem;margin-bottom:8px}
+        .empty-state p{color:#334155;font-size:.85rem;margin-bottom:24px}
+        .empty-state a{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border-radius:10px;text-decoration:none;font-size:.88rem;font-weight:600}
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="icon">🎓</div>
+            <div><span>DASH</span><small>Teacher Panel</small></div>
+        </div>
+        <div class="nav-label">Menu</div>
+        <a href="/teacher" class="nav-link"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="/teacher/create_exam" class="nav-link"><i class="fas fa-plus-circle"></i> Create Exam</a>
+        <a href="/teacher/paper_checking" class="nav-link"><i class="fas fa-file-alt"></i> Paper Checking</a>
+        <a href="/teacher/results_summary" class="nav-link active"><i class="fas fa-chart-bar"></i> Results</a>
+        <div class="sidebar-bottom">
+            <a href="/" class="nav-link"><i class="fas fa-sign-out-alt"></i> Back to Home</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="page-header">
+            <div>
+                <h1>Results Summary</h1>
+                <p>Showing recent completed evaluations</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-sm btn-refresh" onclick="location.reload()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <button class="btn-sm btn-cleanup" onclick="cleanupOldResults()"><i class="fas fa-trash-alt"></i> Cleanup</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card purple">
+                <div class="stat-val">{{ total_evaluations }}</div>
+                <div class="stat-label">Total Evaluations</div>
+            </div>
+            <div class="stat-card teal">
+                <div class="stat-val">{{ avg_percentage }}%</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="stat-card amber">
+                <div class="stat-val">{{ total_students }}</div>
+                <div class="stat-label">Students Evaluated</div>
+            </div>
+            <div class="stat-card rose">
+                <div class="stat-val">{{ today_evaluations }}</div>
+                <div class="stat-label">Today's Evaluations</div>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <div class="table-header">
+                <div>
+                    <h2>Recent Evaluations</h2>
+                    <p>Only completed evaluations are shown here</p>
+                </div>
+            </div>
+
+            {% if results %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student ID</th>
+                        <th>Subject</th>
+                        <th>Score</th>
+                        <th>Grade</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td>{{ result.date }}</td>
+                        <td>{{ result.student_name or result.student_id }}</td>
+                        <td>{{ result.subject }}</td>
+                        <td>{{ result.score }}/{{ result.total_marks }} <span style="color:#475569">({{ result.percentage }}%)</span></td>
+                        <td><span class="grade-badge grade-{{ result.grade.lower().replace('+','-plus') }}">{{ result.grade }}</span></td>
+                        <td><span class="status-badge">✓ Completed</span></td>
+                        <td>
+                            <button class="action-btn btn-view" onclick="showReport('{{ result.result_id }}')"><i class="fas fa-eye"></i> View</button>
+                            <button class="action-btn btn-dl" onclick="downloadReport('{{ result.result_id }}')"><i class="fas fa-download"></i></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <h3>No evaluations yet</h3>
+                <p>Results will appear here after answer sheet checking is completed.</p>
+                <a href="/teacher/paper_checking"><i class="fas fa-upload"></i> Start Paper Checking</a>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        function showReport(id){ window.open('/teacher/detailed_report/'+id,'_blank','width=1000,height=800,scrollbars=yes'); }
+        function downloadReport(id){ window.location.href='/teacher/download_report/'+id; }
+        function cleanupOldResults(){
+            if(confirm('Remove old result files and keep only recent evaluations?')){
+                fetch('/teacher/cleanup_results').then(r=>r.json()).then(d=>{
+                    alert(d.message); if(d.success) location.reload();
+                });
+            }
+        }
+    </script>
+</body>
+</html>

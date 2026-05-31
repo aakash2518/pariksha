@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - DASH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #1e293b;
+            border-right: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            flex-direction: column;
+            padding: 28px 16px;
+            position: fixed;
+            height: 100vh;
+        }
+        .sidebar-logo {
+            display: flex; align-items: center; gap: 12px;
+            padding: 0 8px 28px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 20px;
+        }
+        .sidebar-logo .icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, #6366f1, #14b8a6);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+        .sidebar-logo span { font-size: 1.1rem; font-weight: 700; color: #f1f5f9; }
+        .sidebar-logo small { display: block; font-size: 0.72rem; color: #64748b; }
+
+        .nav-label {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
+            color: #475569; padding: 0 12px; margin-bottom: 8px;
+        }
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 11px 14px; border-radius: 10px;
+            color: #94a3b8; text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            transition: all 0.2s; margin-bottom: 4px;
+        }
+        .nav-link i { width: 18px; text-align: center; font-size: 0.9rem; }
+        .nav-link:hover, .nav-link.active {
+            background: rgba(99,102,241,0.15);
+            color: #a5b4fc;
+        }
+        .nav-link.active { border-left: 3px solid #6366f1; }
+        .sidebar-bottom { margin-top: auto; }
+
+        /* Main */
+        .main { margin-left: 260px; flex: 1; padding: 36px; }
+        .page-header { margin-bottom: 32px; }
+        .page-header h1 { font-size: 1.6rem; font-weight: 700; color: #f1f5f9; }
+        .page-header p { color: #64748b; font-size: 0.9rem; margin-top: 4px; }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .dash-card {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        .dash-card:hover {
+            border-color: rgba(99,102,241,0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+        }
+        .card-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; margin-bottom: 16px;
+        }
+        .icon-purple { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+        .icon-teal   { background: rgba(20,184,166,0.15); color: #5eead4; }
+        .icon-amber  { background: rgba(245,158,11,0.15); color: #fcd34d; }
+        .dash-card h3 { font-size: 1rem; font-weight: 600; color: #f1f5f9; margin-bottom: 8px; }
+        .dash-card p  { font-size: 0.85rem; color: #64748b; line-height: 1.5; }
+        .card-arrow {
+            margin-top: 20px; color: #475569; font-size: 0.8rem;
+            display: flex; align-items: center; gap: 6px;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="icon">🎓</div>
+            <div>
+                <span>DASH</span>
+                <small>Teacher Panel</small>
+            </div>
+        </div>
+        <div class="nav-label">Menu</div>
+        <a href="/teacher" class="nav-link active"><i class="fas fa-home"></i> Dashboard</a>
+        <a href="/teacher/create_exam" class="nav-link"><i class="fas fa-plus-circle"></i> Create Exam</a>
+        <a href="/teacher/paper_checking" class="nav-link"><i class="fas fa-file-alt"></i> Paper Checking</a>
+        <a href="/teacher/results_summary" class="nav-link"><i class="fas fa-chart-bar"></i> Results</a>
+        <div class="sidebar-bottom">
+            <a href="/" class="nav-link"><i class="fas fa-sign-out-alt"></i> Back to Home</a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="page-header">
+            <h1>Dashboard</h1>
+            <p>Welcome back! Manage your exams and evaluations here.</p>
+        </div>
+
+        <div class="cards-grid">
+            <a href="/teacher/create_exam" class="dash-card">
+                <div class="card-icon icon-purple"><i class="fas fa-plus-circle"></i></div>
+                <h3>Create Exam</h3>
+                <p>Set up a new exam with questions, marks, and schedule details.</p>
+                <div class="card-arrow">Go to Create Exam <i class="fas fa-arrow-right"></i></div>
+            </a>
+            <a href="/teacher/paper_checking" class="dash-card">
+                <div class="card-icon icon-teal"><i class="fas fa-file-alt"></i></div>
+                <h3>Paper Checking</h3>
+                <p>Upload question papers and answer sheets for AI-powered evaluation.</p>
+                <div class="card-arrow">Start Checking <i class="fas fa-arrow-right"></i></div>
+            </a>
+            <a href="/teacher/results_summary" class="dash-card">
+                <div class="card-icon icon-amber"><i class="fas fa-chart-bar"></i></div>
+                <h3>Results Summary</h3>
+                <p>View completed evaluations, grades, and detailed performance reports.</p>
+                <div class="card-arrow">View Results <i class="fas fa-arrow-right"></i></div>
+            </a>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASH - AI Exam Evaluation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .bg-glow {
+            position: fixed;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        .glow-1 { background: #6366f1; top: -200px; left: -200px; }
+        .glow-2 { background: #14b8a6; bottom: -200px; right: -200px; }
+
+        .card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 56px 48px;
+            max-width: 560px;
+            width: 90%;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 1;
+        }
+        .logo-icon {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, #6366f1, #14b8a6);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 32px;
+        }
+        h1 { font-size: 2.4rem; font-weight: 700; color: #f1f5f9; margin-bottom: 8px; }
+        .subtitle { color: #94a3b8; font-size: 1rem; margin-bottom: 40px; }
+
+        .features {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 36px;
+            text-align: left;
+        }
+        .features h3 { color: #cbd5e1; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+        .feature-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 7px 0; color: #94a3b8; font-size: 0.9rem;
+        }
+        .feature-item i { color: #14b8a6; font-size: 0.85rem; width: 16px; }
+
+        .buttons { display: flex; gap: 14px; }
+        .btn {
+            flex: 1; padding: 14px 20px;
+            border: none; border-radius: 12px;
+            font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-teacher {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+        .btn-student {
+            background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+            color: white;
+        }
+        .btn:hover { transform: translateY(-2px); opacity: 0.92; }
+    </style>
+</head>
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <div class="card">
+        <div class="logo-icon">🎓</div>
+        <h1>DASH</h1>
+        <p class="subtitle">AI-Powered Exam Evaluation System</p>
+
+        <div class="features">
+            <h3>What we offer</h3>
+            <div class="feature-item"><i class="fas fa-check"></i> Automated answer sheet evaluation using AI</div>
+            <div class="feature-item"><i class="fas fa-check"></i> OCR technology for handwriting recognition</div>
+            <div class="feature-item"><i class="fas fa-check"></i> ML model generates multiple correct answers</div>
+            <div class="feature-item"><i class="fas fa-check"></i> Real-time results and detailed reports</div>
+            <div class="feature-item"><i class="fas fa-check"></i> Secure and efficient exam management</div>
+        </div>
+
+        <div class="buttons">
+            <a href="/teacher" class="btn btn-teacher"><i class="fas fa-chalkboard-teacher"></i> Teacher</a>
+            <a href="/student" class="btn btn-student"><i class="fas fa-user-graduate"></i> Student</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DASH - Student Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#0f172a;min-height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden}
+        .bg-glow{position:fixed;width:500px;height:500px;border-radius:50%;filter:blur(120px);opacity:.12;pointer-events:none}
+        .glow-1{background:#6366f1;top:-150px;left:-150px}
+        .glow-2{background:#14b8a6;bottom:-150px;right:-150px}
+        .card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:48px 40px;max-width:440px;width:90%;backdrop-filter:blur(20px);position:relative;z-index:1}
+        .logo-icon{width:60px;height:60px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:26px}
+        h2{font-size:1.4rem;font-weight:700;color:#f1f5f9;text-align:center;margin-bottom:6px}
+        .sub{color:#64748b;font-size:.85rem;text-align:center;margin-bottom:28px}
+        .input-group{margin-bottom:16px}
+        .input-group label{display:block;font-size:.8rem;font-weight:500;color:#94a3b8;margin-bottom:7px}
+        .input-wrap{display:flex;align-items:center;gap:10px;background:#1e293b;border:1px solid rgba(255,255,255,.08);border-radius:11px;padding:0 14px}
+        .input-wrap i{color:#475569;font-size:.85rem}
+        .input-wrap input{flex:1;background:transparent;border:none;outline:none;color:#e2e8f0;font-size:.9rem;padding:13px 0;font-family:'Inter',sans-serif}
+        .input-wrap input::placeholder{color:#475569}
+        .input-wrap:focus-within{border-color:#6366f1}
+        .btn{width:100%;padding:13px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:11px;font-size:.92rem;font-weight:600;cursor:pointer;margin-top:8px;transition:opacity .2s}
+        .btn:hover{opacity:.9}
+    </style>
+</head>
+<body>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <div class="card">
+        <div class="logo-icon">👤</div>
+        <h2>Student Details</h2>
+        <p class="sub">Fill in your details to begin the exam</p>
+        <form action="/student/login" method="POST">
+            <div class="input-group">
+                <label>Full Name</label>
+                <div class="input-wrap"><i class="fas fa-user"></i><input type="text" name="name" placeholder="Enter your full name" required></div>
+            </div>
+            <div class="input-group">
+                <label>Roll Number</label>
+                <div class="input-wrap"><i class="fas fa-id-card"></i><input type="text" name="roll_number" placeholder="Enter your roll number" required></div>
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <div class="input-wrap"><i class="fas fa-envelope"></i><input type="email" name="email" placeholder="Enter your email" required></div>
+            </div>
+            <button type="submit" class="btn">Continue <i class="fas fa-arrow-right"></i></button>
+        </form>
+    </div>
+</body>
+</html>

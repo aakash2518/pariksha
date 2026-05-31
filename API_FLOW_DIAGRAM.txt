@@ -1,0 +1,235 @@
+═══════════════════════════════════════════════════════════
+    ANSWER CHECKING FLOW - APIs USED
+═══════════════════════════════════════════════════════════
+
+
+┌─────────────────────────────────────────────────────────┐
+│  STEP 1: TEACHER UPLOADS FILES                          │
+└─────────────────────────────────────────────────────────┘
+                         │
+                         │ (Flask File Upload API)
+                         ↓
+            ┌────────────────────────┐
+            │  question_paper.pdf    │
+            │  answer_sheet.pdf      │
+            └────────────────────────┘
+                         │
+                         ↓
+
+
+┌─────────────────────────────────────────────────────────┐
+│  STEP 2: EXTRACT TEXT FROM PDFs                         │
+└─────────────────────────────────────────────────────────┘
+                         │
+                         │ (PyPDF2 API)
+                         ↓
+            ┌────────────────────────┐
+            │  Question Paper Text:  │
+            │  "Q1: What is Python?" │
+            │                        │
+            │  Answer Sheet Text:    │
+            │  "Python is a lang..." │
+            └────────────────────────┘
+                         │
+                         ↓
+
+
+┌─────────────────────────────────────────────────────────┐
+│  STEP 3: SEND TO AI FOR EVALUATION                      │
+└─────────────────────────────────────────────────────────┘
+                         │
+                         │ (Google Gemini AI API) ⭐
+                         ↓
+            ┌────────────────────────┐
+            │   GEMINI AI BRAIN      │
+            │                        │
+            │  Analyzing:            │
+            │  ✓ Accuracy            │
+            │  ✓ Grammar             │
+            │  ✓ Completeness        │
+            │  ✓ Relevance           │
+            └────────────────────────┘
+                         │
+                         ↓
+
+
+┌─────────────────────────────────────────────────────────┐
+│  STEP 4: AI GENERATES EVALUATION                        │
+└─────────────────────────────────────────────────────────┘
+                         │
+                         │ (Gemini AI Processing)
+                         ↓
+            ┌────────────────────────┐
+            │  EVALUATION REPORT:    │
+            │                        │
+            │  Q1: 8/10 marks        │
+            │  - Correct concept     │
+            │  - Good grammar        │
+            │  - Needs more detail   │
+            │                        │
+            │  Overall: 85%          │
+            │  Grade: B+             │
+            └────────────────────────┘
+                         │
+                         ↓
+
+
+┌─────────────────────────────────────────────────────────┐
+│  STEP 5: RETURN RESULTS TO TEACHER                      │
+└─────────────────────────────────────────────────────────┘
+                         │
+                         │ (Flask JSON Response)
+                         ↓
+            ┌────────────────────────┐
+            │  TEACHER DASHBOARD     │
+            │                        │
+            │  📊 Results displayed  │
+            │  📝 Feedback shown     │
+            │  💾 Saved to database  │
+            └────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════
+    DETAILED API BREAKDOWN
+═══════════════════════════════════════════════════════════
+
+
+API 1: FLASK FILE UPLOAD
+────────────────────────────────────────────────────────────
+Purpose:  Handle PDF uploads from browser
+Input:    question_paper.pdf, answer_sheet.pdf
+Output:   Saved files on server
+Code:     request.files['question_paper']
+
+
+API 2: PyPDF2
+────────────────────────────────────────────────────────────
+Purpose:  Extract text from PDF files
+Input:    PDF file path
+Output:   Plain text string
+Code:     PyPDF2.PdfReader(file).pages[0].extract_text()
+
+Example:
+  Input:  question_paper.pdf
+  Output: "Question 1: What is Python? (10 marks)"
+
+
+API 3: GOOGLE GEMINI AI ⭐ (MAIN ENGINE)
+────────────────────────────────────────────────────────────
+Purpose:  Evaluate answers and generate feedback
+Input:    Question text + Answer text
+Output:   Marks, feedback, detailed evaluation
+
+What it checks:
+  1. ACCURACY (40%)
+     - Is answer factually correct?
+     - Concepts understood?
+     - Right information?
+  
+  2. GRAMMAR (20%)
+     - Spelling correct?
+     - Sentence structure good?
+     - Language quality?
+  
+  3. COMPLETENESS (30%)
+     - All points covered?
+     - Sufficient detail?
+     - Nothing missing?
+  
+  4. RELEVANCE (10%)
+     - Answers the question?
+     - On topic?
+     - Not off-track?
+
+Example Prompt to AI:
+  ┌──────────────────────────────────────────┐
+  │ Question Paper:                          │
+  │ Q1: What is Python? (10 marks)           │
+  │                                          │
+  │ Answer Sheet:                            │
+  │ Python is a programming language         │
+  │                                          │
+  │ Evaluate this answer comprehensively     │
+  └──────────────────────────────────────────┘
+
+AI Response:
+  ┌──────────────────────────────────────────┐
+  │ EVALUATION:                              │
+  │                                          │
+  │ Question 1: 7/10 marks                   │
+  │                                          │
+  │ Accuracy: 8/10                           │
+  │ - Correct basic definition               │
+  │ - Missing: high-level, interpreted       │
+  │                                          │
+  │ Grammar: 10/10                           │
+  │ - Perfect sentence structure             │
+  │                                          │
+  │ Completeness: 5/10                       │
+  │ - Too brief                              │
+  │ - Should mention: uses, features         │
+  │                                          │
+  │ Relevance: 10/10                         │
+  │ - Directly answers question              │
+  │                                          │
+  │ FEEDBACK:                                │
+  │ Good start! Add more details about       │
+  │ Python's features and applications.      │
+  └──────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════
+    WHAT EACH API DOES
+═══════════════════════════════════════════════════════════
+
+┌─────────────────┬──────────────────────────────────────┐
+│ API             │ Job                                  │
+├─────────────────┼──────────────────────────────────────┤
+│ Flask Upload    │ Receive PDFs from browser            │
+│ PyPDF2          │ Convert PDF → Text                   │
+│ Gemini AI       │ Evaluate text → Marks + Feedback     │
+│ Flask Response  │ Send results back to browser         │
+└─────────────────┴──────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════
+    GEMINI AI = THE BRAIN 🧠
+═══════════════════════════════════════════════════════════
+
+Gemini AI does EVERYTHING for evaluation:
+  ✓ Reads question
+  ✓ Reads answer
+  ✓ Understands context
+  ✓ Checks grammar (built-in)
+  ✓ Checks spelling (built-in)
+  ✓ Compares with expected answer
+  ✓ Calculates marks
+  ✓ Generates detailed feedback
+  ✓ Provides improvement suggestions
+
+You don't need separate APIs for:
+  ✗ Grammar checking (Gemini does it)
+  ✗ Semantic matching (Gemini does it)
+  ✗ Concept understanding (Gemini does it)
+
+
+═══════════════════════════════════════════════════════════
+    SUMMARY
+═══════════════════════════════════════════════════════════
+
+ACTIVE APIs in your app.py:
+  1. Flask File Upload  → Handles PDF uploads
+  2. PyPDF2            → Extracts text from PDFs
+  3. Google Gemini AI  → Evaluates answers ⭐
+
+That's it! Just 3 APIs doing all the work.
+
+Gemini AI is the MAIN API that does:
+  - Answer evaluation
+  - Grammar checking
+  - Feedback generation
+  - Marking
+  - Everything related to checking answers!
+
+
+═══════════════════════════════════════════════════════════
