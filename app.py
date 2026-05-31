@@ -47,11 +47,43 @@ app = Flask(__name__, template_folder='UI/templates', static_folder='UI/static')
 app.secret_key = 'exam_checker_2024_secure_key_' + str(uuid.uuid4().hex)
 
 # Directory setup
-QUESTIONS_DIR = r'Database\questions'
-UPLOAD_FOLDER = r'Database\uploads'
-RESULTS_FOLDER = r'Database\results'
+import shutil
+
+IS_VERCEL = os.environ.get("VERCEL") == "1"
+
+def setup_vercel_paths():
+    if IS_VERCEL:
+        tmp_db_dir = '/tmp/Database'
+        os.makedirs(tmp_db_dir, exist_ok=True)
+        os.makedirs(os.path.join(tmp_db_dir, 'questions'), exist_ok=True)
+        os.makedirs(os.path.join(tmp_db_dir, 'uploads'), exist_ok=True)
+        os.makedirs(os.path.join(tmp_db_dir, 'results'), exist_ok=True)
+        
+        local_db_dir = 'Database'
+        if os.path.exists(local_db_dir):
+            for root, dirs, files in os.walk(local_db_dir):
+                for file in files:
+                    src_file = os.path.join(root, file)
+                    rel_path = os.path.relpath(src_file, local_db_dir)
+                    dest_file = os.path.join(tmp_db_dir, rel_path)
+                    os.makedirs(os.path.dirname(dest_file), exist_ok=True)
+                    if not os.path.exists(dest_file):
+                        try:
+                            shutil.copy2(src_file, dest_file)
+                        except Exception as e:
+                            print(f"Error copying {src_file}: {e}")
+
+if IS_VERCEL:
+    setup_vercel_paths()
+    BASE_DIR = "/tmp"
+else:
+    BASE_DIR = "."
+
+QUESTIONS_DIR = os.path.join(BASE_DIR, 'Database', 'questions')
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'Database', 'uploads')
+RESULTS_FOLDER = os.path.join(BASE_DIR, 'Database', 'results')
+
 os.makedirs(QUESTIONS_DIR, exist_ok=True)
-os.makedirs(r'Database', exist_ok=True)
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
 
@@ -329,9 +361,9 @@ def get_current_api_key():
     return API_KEYS[current_key_index]
 
 # CSV file paths
-TEST_DETAILS_CSV = r"Database\test_details.csv"
-STUDENT_DETAILS_CSV = r"Database\student_details.csv"
-RESULTS_CSV = r"Database\results.csv"
+TEST_DETAILS_CSV = os.path.join(BASE_DIR, 'Database', 'test_details.csv')
+STUDENT_DETAILS_CSV = os.path.join(BASE_DIR, 'Database', 'student_details.csv')
+RESULTS_CSV = os.path.join(BASE_DIR, 'Database', 'results.csv')
 
 # ==================== HELPER FUNCTIONS ====================
 
